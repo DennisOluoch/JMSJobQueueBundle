@@ -1,7 +1,5 @@
 language: php
 
-sudo: false
-
 branches:
   only:
     - master
@@ -10,11 +8,13 @@ cache:
   directories:
     - $HOME/.composer/cache/files
 
-matrix:
+jobs:
   fast_finish: true
   include:
     - php: 7.1
     - php: 7.2
+    - php: 7.3
+    - php: 7.4
 
 services:
   - mysql
@@ -26,7 +26,7 @@ before_script:
   - composer self-update
   - echo "memory_limit=3G" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
 
-install: composer install --dev
+install: composer install 
 
 script: phpunit --coverage-clover clover
 
