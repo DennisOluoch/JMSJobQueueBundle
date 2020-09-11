@@ -2,9 +2,13 @@ language: php
 
 sudo: false
 
+branches:
+  only:
+    - master
+
 cache:
   directories:
-    - $HOME/.composer/cache
+    - $HOME/.composer/cache/files
 
 matrix:
   fast_finish: true
@@ -12,13 +16,17 @@ matrix:
     - php: 7.1
     - php: 7.2
 
+services:
+  - mysql
+
+before_install:
+  - mysql -u root --password="" -e 'CREATE DATABASE jmsjobqueue_test;'
+
 before_script:
   - composer self-update
-  - echo "memory_limit=3G" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini  
+  - echo "memory_limit=3G" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
 
 install: composer install --dev
 
 script: phpunit --coverage-clover clover
 
-after_success:
-    - curl -sL https://bit.ly/artifact-uploader | php

@@ -3,11 +3,11 @@ JMSJobQueueBundle
 
 Overview
 --------
-This bundle allows you to schedule Symfony2 console commands as server-side jobs.
+This bundle allows you to schedule Symfony5 console commands as server-side jobs.
 
 Features:
 
-- schedule Symfony2 console commands
+- schedule Symfony5 console commands
 - concurrent job execution
 - multiple queues
 - dependencies between jobs

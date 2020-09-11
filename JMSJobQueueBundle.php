@@ -18,7 +18,6 @@
 
 namespace JMS\JobQueueBundle;
 
-use JMS\JobQueueBundle\DependencyInjection\CompilerPass\JobSchedulersPass;
 use JMS\JobQueueBundle\DependencyInjection\CompilerPass\LinkGeneratorsPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;

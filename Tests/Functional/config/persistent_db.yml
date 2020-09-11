@@ -1,20 +1,21 @@
 imports:
     - { resource: framework.yml }
-
-parameters:
-    database_path: "%kernel.cache_dir%/database.sqlite"
+    - { resource: parameters.yml }
 
 doctrine:
     dbal:
-        driver:   pdo_sqlite
-        path:     "%database_path%"
-
+        driver: pdo_mysql
+        charset: UTF8
+        host: "%db_host%"
+        dbname: "%db_name%"
+        server_version: 5.7
+        user: "%db_user%"
+        password: "%db_password%"
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"
         entity_managers:
             default:
                 auto_mapping: true
-
 
 jms_job_queue:
     queue_options_defaults:

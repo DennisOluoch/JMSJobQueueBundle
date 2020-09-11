@@ -22,8 +22,10 @@ class ScheduledEveryFewSecondsCommand extends Command implements CronCommand
         return new Job('scheduled-every-few-seconds');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln('Done');
+
+        return Command::SUCCESS;
     }
 }

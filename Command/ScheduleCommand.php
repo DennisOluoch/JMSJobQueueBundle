@@ -25,11 +25,11 @@ class ScheduleCommand extends Command
 
     public function __construct(ManagerRegistry $managerRegistry, iterable $schedulers, iterable $cronCommands)
     {
-        parent::__construct();
-
         $this->registry = $managerRegistry;
         $this->schedulers = $schedulers;
         $this->cronCommands = $cronCommands;
+
+        parent::__construct();
     }
 
     protected function configure()
@@ -37,21 +37,20 @@ class ScheduleCommand extends Command
         $this
             ->setDescription('Schedules jobs at defined intervals')
             ->addOption('max-runtime', null, InputOption::VALUE_REQUIRED, 'The maximum runtime of this command.', 3600)
-            ->addOption('min-job-interval', null, InputOption::VALUE_REQUIRED, 'The minimum time between schedules jobs in seconds.', 5)
-        ;
+            ->addOption('min-job-interval', null, InputOption::VALUE_REQUIRED, 'The minimum time between schedules jobs in seconds.', 5);
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $maxRuntime = $input->getOption('max-runtime');
         if ($maxRuntime > 300) {
-            $maxRuntime += random_int(0, (integer)($input->getOption('max-runtime') * 0.05));
+            $maxRuntime += random_int(0, (int)($input->getOption('max-runtime') * 0.05));
         }
         if ($maxRuntime <= 0) {
             throw new \RuntimeException('Max. runtime must be greater than zero.');
         }
 
-        $minJobInterval = (integer)$input->getOption('min-job-interval');
+        $minJobInterval = (int)$input->getOption('min-job-interval');
         if ($minJobInterval <= 0) {
             throw new \RuntimeException('Min. job interval must be greater than zero.');
         }
@@ -60,7 +59,7 @@ class ScheduleCommand extends Command
         if (empty($jobSchedulers)) {
             $output->writeln('No job schedulers found, exiting...');
 
-            return 0;
+            return Command::SUCCESS;
         }
 
         $jobsLastRunAt = $this->populateJobsLastRunAt($this->registry->getManagerForClass(CronJob::class), $jobSchedulers);
@@ -82,7 +81,7 @@ class ScheduleCommand extends Command
             }
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     /**
@@ -94,7 +93,7 @@ class ScheduleCommand extends Command
         foreach ($jobSchedulers as $name => $scheduler) {
             $lastRunAt = $jobsLastRunAt[$name];
 
-            if ( ! $scheduler->shouldSchedule($name, $lastRunAt)) {
+            if (!$scheduler->shouldSchedule($name, $lastRunAt)) {
                 continue;
             }
 
@@ -102,7 +101,7 @@ class ScheduleCommand extends Command
             $jobsLastRunAt[$name] = $newLastRunAt;
 
             if ($success) {
-                $output->writeln('Scheduling command '.$name);
+                $output->writeln('Scheduling command ' . $name);
                 $job = $scheduler->createJob($name, $lastRunAt);
                 $em = $this->registry->getManagerForClass(Job::class);
                 $em->persist($job);
@@ -116,6 +115,12 @@ class ScheduleCommand extends Command
         /** @var EntityManager $em */
         $em = $this->registry->getManagerForClass(CronJob::class);
         $con = $em->getConnection();
+
+        //* Issue #178 resolved
+        if (!$con->ping()) {
+            $con->close();
+            $con->connect();
+        }
 
         $now = new \DateTime();
         $affectedRows = $con->executeUpdate(
@@ -136,7 +141,7 @@ class ScheduleCommand extends Command
         }
 
         /** @var CronJob $cronJob */
-        $cronJob = $em->createQuery("SELECT j FROM ".CronJob::class." j WHERE j.command = :command")
+        $cronJob = $em->createQuery("SELECT j FROM " . CronJob::class . " j WHERE j.command = :command")
             ->setParameter('command', $commandName)
             ->setHint(Query::HINT_REFRESH, true)
             ->getSingleResult();
@@ -156,7 +161,7 @@ class ScheduleCommand extends Command
 
         foreach ($this->cronCommands as $command) {
             /** @var CronCommand $command */
-            if ( ! $command instanceof Command) {
+            if (!$command instanceof Command) {
                 throw new \RuntimeException('CronCommand should only be used on Symfony commands.');
             }
 
@@ -176,7 +181,7 @@ class ScheduleCommand extends Command
         }
 
         foreach (array_keys($jobSchedulers) as $name) {
-            if ( ! isset($jobsLastRunAt[$name])) {
+            if (!isset($jobsLastRunAt[$name])) {
                 $job = new CronJob($name);
                 $em->persist($job);
                 $jobsLastRunAt[$name] = $job->getLastRunAt();

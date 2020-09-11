@@ -1,8 +1,15 @@
+imports:
+    - { resource: parameters.yml }
+
 doctrine:
     dbal:
-        driver:   pdo_sqlite
-        memory:   true
-
+        driver: pdo_mysql
+        charset: UTF8
+        host: "%db_host%"
+        server_version: 5.7
+        dbname: "%db_name%"
+        user: "%db_user%"
+        password: "%db_password%"
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"
         entity_managers:
@@ -16,4 +23,4 @@ doctrine:
                 mappings:
                     TestBundle:
                         is_bundle: true
-                        type: annotation                        
+                        type: annotation

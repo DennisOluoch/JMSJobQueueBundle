@@ -22,7 +22,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\JobQueueBundle\Exception\InvalidStateTransitionException;
 use JMS\JobQueueBundle\Exception\LogicException;
-use Symfony\Component\Debug\Exception\FlattenException;
+use Symfony\Component\ErrorHandler\Exception\FlattenException;
 
 /**
  * @ORM\Entity
@@ -75,13 +75,6 @@ class Job
      */
     const STATE_INCOMPLETE = 'incomplete';
 
-    /**
-     * State if an error occurs in the runner command.
-     *
-     * The runner command is the command that actually launches the individual
-     * jobs. If instead an error occurs in the job command, this will result
-     * in a state of FAILED.
-     */
     const DEFAULT_QUEUE = 'default';
     const MAX_QUEUE_LENGTH = 50;
 
@@ -122,7 +115,7 @@ class Job
     /** @ORM\Column(type = "string") */
     private $command;
 
-    /** @ORM\Column(type = "json_array") */
+    /** @ORM\Column(type = "json") */
     private $args;
 
     /**
@@ -269,7 +262,7 @@ class Job
 
     public function isInFinalState()
     {
-        return ! $this->isNew() && ! $this->isPending() && ! $this->isRunning();
+        return !$this->isNew() && !$this->isPending() && !$this->isRunning();
     }
 
     public function isStartable()
@@ -291,7 +284,7 @@ class Job
 
         switch ($this->state) {
             case self::STATE_NEW:
-                if ( ! in_array($newState, array(self::STATE_PENDING, self::STATE_CANCELED), true)) {
+                if (!in_array($newState, array(self::STATE_PENDING, self::STATE_CANCELED), true)) {
                     throw new InvalidStateTransitionException($this, $newState, array(self::STATE_PENDING, self::STATE_CANCELED));
                 }
 
@@ -302,7 +295,7 @@ class Job
                 break;
 
             case self::STATE_PENDING:
-                if ( ! in_array($newState, array(self::STATE_RUNNING, self::STATE_CANCELED), true)) {
+                if (!in_array($newState, array(self::STATE_RUNNING, self::STATE_CANCELED), true)) {
                     throw new InvalidStateTransitionException($this, $newState, array(self::STATE_RUNNING, self::STATE_CANCELED));
                 }
 
@@ -316,7 +309,7 @@ class Job
                 break;
 
             case self::STATE_RUNNING:
-                if ( ! in_array($newState, array(self::STATE_FINISHED, self::STATE_FAILED, self::STATE_TERMINATED, self::STATE_INCOMPLETE))) {
+                if (!in_array($newState, array(self::STATE_FINISHED, self::STATE_FAILED, self::STATE_TERMINATED, self::STATE_INCOMPLETE))) {
                     throw new InvalidStateTransitionException($this, $newState, array(self::STATE_FINISHED, self::STATE_FAILED, self::STATE_TERMINATED, self::STATE_INCOMPLETE));
                 }
 
@@ -331,7 +324,7 @@ class Job
                 throw new InvalidStateTransitionException($this, $newState);
 
             default:
-                throw new LogicException('The previous cases were exhaustive. Unknown state: '.$this->state);
+                throw new LogicException('The previous cases were exhaustive. Unknown state: ' . $this->state);
         }
 
         $this->state = $newState;
@@ -390,7 +383,7 @@ class Job
 
     public function addRelatedEntity($entity)
     {
-        if ( ! is_object($entity)) {
+        if (!is_object($entity)) {
             throw new \RuntimeException(sprintf('$entity must be an object.'));
         }
 
@@ -431,7 +424,7 @@ class Job
 
     public function setRuntime($time)
     {
-        $this->runtime = (integer) $time;
+        $this->runtime = (int) $time;
     }
 
     public function getMemoryUsage()
@@ -486,7 +479,7 @@ class Job
 
     public function setMaxRuntime($time)
     {
-        $this->maxRuntime = (integer) $time;
+        $this->maxRuntime = (int) $time;
     }
 
     public function getMaxRuntime()
@@ -506,7 +499,7 @@ class Job
 
     public function setMaxRetries($tries)
     {
-        $this->maxRetries = (integer) $tries;
+        $this->maxRetries = (int) $tries;
     }
 
     public function isRetryAllowed()
@@ -532,11 +525,11 @@ class Job
     public function setOriginalJob(Job $job)
     {
         if (self::STATE_PENDING !== $this->state) {
-            throw new \LogicException($this.' must be in state "PENDING".');
+            throw new \LogicException($this . ' must be in state "PENDING".');
         }
 
         if (null !== $this->originalJob) {
-            throw new \LogicException($this.' already has an original job set.');
+            throw new \LogicException($this . ' already has an original job set.');
         }
 
         $this->originalJob = $job;
@@ -567,7 +560,7 @@ class Job
         foreach ($this->retryJobs as $job) {
             /** @var Job $job */
 
-            if ( ! $job->isInFinalState()) {
+            if (!$job->isInFinalState()) {
                 return true;
             }
         }
@@ -655,7 +648,7 @@ class Job
             return false;
         }
 
-        if (self::STATE_PENDING === $this->state && ! $this->isStartable()) {
+        if (self::STATE_PENDING === $this->state && !$this->isStartable()) {
             return false;
         }
 

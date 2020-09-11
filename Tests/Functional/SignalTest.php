@@ -2,30 +2,29 @@
 
 namespace JMS\JobQueueBundle\Tests\Functional;
 
-use Doctrine\ORM\EntityManager;
-use JMS\JobQueueBundle\Entity\Job;
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\Process;
 
-class SignalTest extends TestCase
+class SignalTest extends BaseTestCase
 {
-    public function testControlledExit()
+    public function testControlledExit(): void
     {
-        if ( ! extension_loaded('pcntl')) {
+        if (!extension_loaded('pcntl')) {
             $this->markTestSkipped('PCNTL extension is not loaded.');
         }
 
-        $proc = new Process('exec '.PHP_BINARY.' '.escapeshellarg(__DIR__.'/console').' jms-job-queue:run --worker-name=test --verbose --max-runtime=999999');
+        $proc = new Process([PHP_BINARY, sprintf('%s', __DIR__ . '/console'), 'jms-job-queue:run', '--worker-name=test', '--verbose', '--max-runtime=999999']);
         $proc->start();
 
         usleep(5E5);
 
-        $this->assertTrue($proc->isRunning(), 'Process exited prematurely: '.$proc->getOutput().$proc->getErrorOutput());
+        $this->assertTrue($proc->isRunning(), 'Process exited prematurely: ' . $proc->getOutput() . $proc->getErrorOutput());
         $this->assertTrueWithin(
             3,
-            function() use ($proc) { return false !== strpos($proc->getOutput(), 'Signal Handlers have been installed'); },
-            function() use ($proc) {
-                $this->fail('Signal handlers were not installed: '.$proc->getOutput().$proc->getErrorOutput());
+            function () use ($proc) {
+                return false !== strpos($proc->getOutput(), 'Signal Handlers have been installed');
+            },
+            function () use ($proc) {
+                $this->fail('Signal handlers were not installed: ' . $proc->getOutput() . $proc->getErrorOutput());
             }
         );
 
@@ -33,24 +32,28 @@ class SignalTest extends TestCase
 
         $this->assertTrueWithin(
             3,
-            function() use ($proc) { return false !== strpos($proc->getOutput(), 'Received SIGTERM'); },
-            function() use ($proc) {
+            function () use ($proc) {
+                return false !== strpos($proc->getOutput(), 'Received SIGTERM');
+            },
+            function () use ($proc) {
                 $this->fail('Signal was not received by process within 3 seconds: ' . $proc->getOutput() . $proc->getErrorOutput());
             }
         );
 
         $this->assertTrueWithin(
             3,
-            function() use ($proc) { return ! $proc->isRunning(); },
-            function() use ($proc) {
-                $this->fail('Process did not terminate within 3 seconds: '.$proc->getOutput().$proc->getErrorOutput());
+            function () use ($proc) {
+                return !$proc->isRunning();
+            },
+            function () use ($proc) {
+                $this->fail('Process did not terminate within 3 seconds: ' . $proc->getOutput() . $proc->getErrorOutput());
             }
         );
 
         $this->assertContains('All jobs finished, exiting.', $proc->getOutput());
     }
 
-    private function assertTrueWithin($seconds, callable $block, callable $failureHandler)
+    private function assertTrueWithin($seconds, callable $block, callable $failureHandler): void
     {
         $start = microtime(true);
         while (true) {
@@ -65,5 +68,12 @@ class SignalTest extends TestCase
 
             usleep(2E5);
         }
+    }
+
+    protected function setUp(): void
+    {
+        $this->createClient();
+
+        $this->importDatabaseSchema();
     }
 }

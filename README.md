@@ -1,8 +1,25 @@
-JMSJobQueueBundle [![Build Status](https://secure.travis-ci.org/schmittjoh/JMSJobQueueBundle.png?branch=master)](http://travis-ci.org/schmittjoh/JMSJobQueueBundle)
+JMSJobQueueBundle [![Build Status](https://travis-ci.org/DennisOluoch/JMSJobQueueBundle.svg?branch=master)](https://travis-ci.org/DennisOluoch/JMSJobQueueBundle)
 =================
 
+This bundle is a fork of [JMSJobQueueBundle](https://github.com/schmittjoh/JMSJobQueueBundle/) revamped to be compatible with Symfony 5 applications.
+
+## Overview
+
+This bundle allows you to schedule Symfony 5 console commands as server-side jobs.
+
+Features:
+
+- schedule Symfony 5 console commands
+- concurrent job execution
+- multiple queues
+- dependencies between jobs
+- logging of stdout/stderr output
+- logging of exception stack trace
+- events to hook into job execution
+- retry logic
+
 Documentation: 
-[Resources/doc](http://jmsyst.com/bundles/JMSJobQueueBundle)
+[Resources/doc](https://github.com/schmittjoh/JMSJobQueueBundle/blob/master/Resources/doc/)
     
 
 Code License:

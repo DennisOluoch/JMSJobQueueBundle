@@ -4,48 +4,26 @@ Installation
 Installing JMSJobQueueBundle
 ============================
 
-You can easily install JMSJobQueueBundle with composer. Just add the following
-to your `composer.json`file:
+You can easily install JMSJobQueueBundle with composer. Just run:
 
-.. code-block :: js
+composer require jms/job-queue-bundle
 
-    // composer.json
-    {
-        // ...
-        require: {
-            // ...
-            "jms/job-queue-bundle": "dev-master"
-        }
-    }
-
-.. note ::
-
-    Please replace `dev-master` in the snippet above with the latest stable
-    branch, for example ``1.0.*``.
-
-Then, you can install the new dependencies by running composer's ``update``
-command from the directory where your ``composer.json`` file is located:
-
-.. code-block :: bash
-
-    composer update jms/job-queue-bundle
-
-Now, Composer will automatically download all required files, and install them
-for you. Next you need to update your ``AppKernel.php`` file, and register the
-new bundle:
+Next you need to update your ``bundles.php`` file, and register the
+new bundle. If you are in Symfony 4 and above the bundle will 
+automatically be registered using Symfony Flex:
 
 .. code-block :: php
 
     <?php
 
-    // in AppKernel::registerBundles()
-    $bundles = array(
+    // in config/bundles.php
+    return [
         // ...
-        new JMS\JobQueueBundle\JMSJobQueueBundle(),
+        JMS\JobQueueBundle\JMSJobQueueBundle::class => ['all' => true],
         // ...
-    );
+    ];
 
-Finally, have your ``app/console`` use JMSJobQueueBundle's ``Application``:
+Finally, have your ``bin/console`` use JMSJobQueueBundle's ``Application``:
 
 .. code-block :: php
 
@@ -71,21 +49,21 @@ Then, update your dependencies using
 
 .. code-block :: bash
 
-    php composer.phar update
+    php composer update
 
-And add the JMSDiExtraBundle and JMSAopBundle to your appKernel.php:
+And add the JMSDiExtraBundle and JMSAopBundle to your config/bundles.php:
 
 .. code-block :: php
     
     <?php
 
     // in AppKernel::registerBundles()
-    $bundles = array(
+    return [
         // ...
-        new JMS\DiExtraBundle\JMSDiExtraBundle($this),
-        new JMS\AopBundle\JMSAopBundle(),
+        JMS\DiExtraBundle\JMSDiExtraBundle::class => ['all' => true],
+        JMS\AopBundle\JMSAopBundle::class => ['all' => true],
         // ...
-    );
+    ];
 
 Typically, you would also want to add some access control restrictions for these
 actions. If you are using ``JMSSecurityExtraBundle`` this could look like this:
@@ -109,7 +87,7 @@ Below, is a sample configuration that you can use with supervisord:
 .. code-block :: ini
 
     [program:jms_job_queue_runner]
-    command=php %kernel.root_dir%/console jms-job-queue:run --env=prod --verbose
+    command=php %kernel.project_dir%/console jms-job-queue:run --env=prod --verbose
     process_name=%(program_name)s
     numprocs=1
     directory=/tmp

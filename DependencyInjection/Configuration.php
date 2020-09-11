@@ -34,24 +34,30 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('jms_job_queue');
+        $treeBuilder = new TreeBuilder('jms_job_queue');
+
+        if (method_exists($treeBuilder, 'getRootNode')) {
+            $rootNode = $treeBuilder->getRootNode();
+        } else {
+            // BC layer for symfony/config 4.1 and older
+            $rootNode = $treeBuilder->root('jms_job_queue');
+        }
 
         $rootNode
             ->children()
-                ->booleanNode('statistics')->defaultTrue()->end();
+            ->booleanNode('statistics')->defaultTrue()->end();
 
         $defaultOptionsNode = $rootNode
             ->children()
-                ->arrayNode('queue_options_defaults')
-                    ->addDefaultsIfNotSet();
+            ->arrayNode('queue_options_defaults')
+            ->addDefaultsIfNotSet();
         $this->addQueueOptions($defaultOptionsNode);
 
         $queueOptionsNode = $rootNode
             ->children()
-                ->arrayNode('queue_options')
-                    ->useAttributeAsKey('queue')
-                    ->prototype('array');
+            ->arrayNode('queue_options')
+            ->useAttributeAsKey('queue')
+            ->prototype('array');
         $this->addQueueOptions($queueOptionsNode);
 
         return $treeBuilder;
@@ -61,7 +67,6 @@ class Configuration implements ConfigurationInterface
     {
         $def
             ->children()
-                ->scalarNode('max_concurrent_jobs')->end()
-        ;
+            ->scalarNode('max_concurrent_jobs')->end();
     }
 }

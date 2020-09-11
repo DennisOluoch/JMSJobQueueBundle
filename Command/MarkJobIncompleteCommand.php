@@ -20,38 +20,37 @@ class MarkJobIncompleteCommand extends Command
 
     public function __construct(ManagerRegistry $managerRegistry, JobManager $jobManager)
     {
-        parent::__construct();
-
         $this->registry = $managerRegistry;
         $this->jobManager = $jobManager;
+
+        parent::__construct();
     }
 
     protected function configure()
     {
         $this
             ->setDescription('Internal command (do not use). It marks jobs as incomplete.')
-            ->addArgument('job-id', InputArgument::REQUIRED, 'The ID of the Job.')
-        ;
+            ->addArgument('job-id', InputArgument::REQUIRED, 'The ID of the Job.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         /** @var EntityManager $em */
         $em = $this->registry->getManagerForClass(Job::class);
 
         /** @var Job|null $job */
-        $job = $em->createQuery("SELECT j FROM ".Job::class." j WHERE j.id = :id")
+        $job = $em->createQuery("SELECT j FROM " . Job::class . " j WHERE j.id = :id")
             ->setParameter('id', $input->getArgument('job-id'))
             ->getOneOrNullResult();
 
         if ($job === null) {
             $output->writeln('<error>Job was not found.</error>');
 
-            return 1;
+            return Command::FAILURE;
         }
 
         $this->jobManager->closeJob($job, Job::STATE_INCOMPLETE);
 
-        return 0;
+        return Command::SUCCESS;
     }
 }
