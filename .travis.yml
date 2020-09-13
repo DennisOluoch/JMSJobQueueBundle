@@ -32,6 +32,7 @@ services:
 
 before_install:
   - mysql -u root -e 'CREATE DATABASE jmsjobqueue_test;'
+  - echo "memory_limit=-1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
   - |
     if [ -n "$COVERAGE" ]; then
       pecl install pcov;
@@ -48,7 +49,6 @@ before_install:
 
 before_script:
   - composer self-update
-  - echo "memory_limit=-1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
 
 install: composer update
 
