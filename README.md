@@ -19,12 +19,12 @@ Features:
 - retry logic
 
 Documentation: 
-[Resources/doc](https://github.com/schmittjoh/JMSJobQueueBundle/blob/master/Resources/doc/)
+[Resources/doc](https://github.com/DennisOluoch/JMSJobQueueBundle/blob/master/Resources/doc/)
     
 
 Code License:
-[Resources/meta/LICENSE](https://github.com/schmittjoh/JMSJobQueueBundle/blob/master/Resources/meta/LICENSE)
+[Resources/meta/LICENSE](https://github.com/DennisOluoch/JMSJobQueueBundle/blob/master/Resources/meta/LICENSE)
 
 
 Documentation License:
-[Resources/doc/LICENSE](https://github.com/schmittjoh/JMSJobQueueBundle/blob/master/Resources/doc/LICENSE)
+[Resources/doc/LICENSE](https://github.com/DennisOluoch/JMSJobQueueBundle/blob/master/Resources/doc/LICENSE)
