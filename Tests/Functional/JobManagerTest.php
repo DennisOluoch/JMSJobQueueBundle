@@ -30,8 +30,8 @@ class JobManagerTest extends BaseTestCase
         $this->em->persist($a2);
         $this->em->flush();
 
-        // $this->assertSame($a, $this->jobManager->getJob('a', array('foo')));
-        $this->assertSame($a2, $this->jobManager->findJob('a'));
+        $this->assertSame($a, $this->jobManager->getJob('a', array('foo')));
+        $this->assertSame($a2, $this->jobManager->getJob('a'));
     }
 
     public function testGetOneThrowsWhenNotFound()
