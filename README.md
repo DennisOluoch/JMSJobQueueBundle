@@ -1,4 +1,4 @@
-JMSJobQueueBundle [![Build Status](https://travis-ci.org/DennisOluoch/JMSJobQueueBundle.svg?branch=master)](https://travis-ci.org/DennisOluoch/JMSJobQueueBundle)
+JMSJobQueueBundle [![Build Status](https://travis-ci.org/DennisOluoch/JMSJobQueueBundle.svg?branch=master)](https://travis-ci.org/DennisOluoch/JMSJobQueueBundle) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/DennisOluoch/JMSJobQueueBundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/DennisOluoch/JMSJobQueueBundle/?b=master) [![Code Coverage](https://scrutinizer-ci.com/g/DennisOluoch/JMSJobQueueBundle/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/DennisOluoch/JMSJobQueueBundle/?b=master)
 =================
 
 This bundle is a fork of [JMSJobQueueBundle](https://github.com/schmittjoh/JMSJobQueueBundle/) revamped to be compatible with Symfony 5 applications.

@@ -12,7 +12,7 @@ class SignalTest extends BaseTestCase
             $this->markTestSkipped('PCNTL extension is not loaded.');
         }
 
-        $proc = new Process([PHP_BINARY, sprintf('%s', __DIR__ . '/console'), 'jms-job-queue:run', '--worker-name=test', '--verbose', '--max-runtime=999999']);
+        $proc = new Process([PHP_BINARY, __DIR__ . '/console', 'jms-job-queue:run', '--worker-name=test', '--verbose', '--max-runtime=999999']);
         $proc->start();
 
         usleep(5E5);
@@ -50,7 +50,7 @@ class SignalTest extends BaseTestCase
             }
         );
 
-        $this->assertContains('All jobs finished, exiting.', $proc->getOutput());
+        $this->assertStringContainsString('All jobs finished, exiting.', $proc->getOutput());
     }
 
     private function assertTrueWithin($seconds, callable $block, callable $failureHandler): void

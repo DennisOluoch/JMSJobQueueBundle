@@ -4,9 +4,17 @@ branches:
   only:
     - master
 
+env:
+  global:
+    - OCULAR_BIN=$HOME/.bin/ocular.phar
+    - PHPUNIT_BIN='vendor/bin/phpunit'
+    - PHPUNIT_CONFIG='phpunit.xml.dist'
+    - PHPUNIT_FLAGS='--stop-on-failure --verbose'
+
 cache:
   directories:
     - $HOME/.composer/cache/files
+    - $HOME/.bin/
 
 jobs:
   fast_finish: true
@@ -15,18 +23,37 @@ jobs:
     - php: 7.2
     - php: 7.3
     - php: 7.4
+      env:
+        - COVERAGE="true"
+        - PHPUNIT_FLAGS="--stop-on-failure --verbose --coverage-text --coverage-clover=coverage.xml"
 
 services:
   - mysql
 
 before_install:
-  - mysql -u root --password="" -e 'CREATE DATABASE jmsjobqueue_test;'
+  - mysql -u root -e 'CREATE DATABASE jmsjobqueue_test;'
+  - |
+    if [ -n "$COVERAGE" ]; then
+      pecl install pcov;
+      PHPUNIT_FLAGS="$PHPUNIT_FLAGS --testdox --coverage-text"
+
+      if [ ! -e $OCULAR_BIN ]; then
+          wget https://scrutinizer-ci.com/ocular.phar -O $OCULAR_BIN
+          chmod +x $OCULAR_BIN
+          alias ocular="php $OCULAR_BIN"
+      fi
+    else
+      PHPUNIT_BIN="php -d zend.enable_gc=0 $PHPUNIT_BIN"
+    fi
 
 before_script:
   - composer self-update
   - echo "memory_limit=3G" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
 
-install: composer install 
+install: composer update
 
-script: phpunit --coverage-clover clover
+script:
+  - $PHPUNIT_BIN -c $PHPUNIT_CONFIG $PHPUNIT_FLAGS
 
+after_script:
+  - if [ -n "$COVERAGE" ]; then $OCULAR_BIN code-coverage:upload --format=php-clover coverage.xml; fi
