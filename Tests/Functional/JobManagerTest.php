@@ -43,7 +43,7 @@ class JobManagerTest extends BaseTestCase
         $this->jobManager->getJob('foo');
     }
 
-    public function getOrCreateIfNotExists()
+    public function testGetOrCreateIfNotExists()
     {
         $a = $this->jobManager->getOrCreateIfNotExists('a');
         $this->assertSame($a, $this->jobManager->getOrCreateIfNotExists('a'));

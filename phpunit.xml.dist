@@ -10,7 +10,6 @@
          stopOnFailure="false"
          bootstrap="./Tests/bootstrap.php"
 >
-
     <testsuites>
         <testsuite name="JMSJobQueueBundle Test Suite">
             <directory>./Tests</directory>

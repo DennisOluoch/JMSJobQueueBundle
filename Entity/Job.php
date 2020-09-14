@@ -116,7 +116,7 @@ class Job
     private $command;
 
     /** @ORM\Column(type = "json") */
-    private $args;
+    private $args = [];
 
     /**
      * @ORM\ManyToMany(targetEntity = "Job", fetch = "EAGER")
@@ -357,7 +357,7 @@ class Job
 
     public function getArgs()
     {
-        return $this->args;
+        return (array) $this->args;
     }
 
     public function getRelatedEntities()

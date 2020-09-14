@@ -49,7 +49,7 @@ class JobManager
     {
         return $this->getJobManager()->createQuery("SELECT j FROM JMSJobQueueBundle:Job j WHERE j.command = :command AND j.args = :args")
             ->setParameter('command', $command)
-            ->setParameter('args', $args, Types::JSON)
+            ->setParameter('args', $args, 'json')
             ->setMaxResults(1)
             ->getOneOrNullResult();
     }
