@@ -25,7 +25,7 @@ jobs:
     - php: 7.4
       env:
         - COVERAGE="true"
-        - PHPUNIT_FLAGS="--stop-on-failure --verbose --coverage-text --coverage-clover=coverage.xml"
+        - PHPUNIT_FLAGS="--verbose --coverage-text --coverage-clover=coverage.xml"
 
 services:
   - mysql
