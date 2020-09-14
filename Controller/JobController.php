@@ -148,10 +148,19 @@ class JobController extends AbstractController
 
         $retryJob = clone $job;
 
+        //@see https://github.com/schmittjoh/JMSJobQueueBundle/issues/189
+        $relatedEntities = $job->getRelatedEntities();
+
+        if (!empty($relatedEntities)) {
+            foreach ($relatedEntities as $relatedEntity) {
+                $retryJob->addRelatedEntity($relatedEntity);
+            }
+        }
+
         $this->getEm()->persist($retryJob);
         $this->getEm()->flush();
 
-        $url = $this->generateUrl('jms_jobs_details', array('id' => $retryJob->getId()));
+        $url = $this->generateUrl('jms_jobs_details', ['id' => $retryJob->getId()]);
 
         return new RedirectResponse($url, 201);
     }

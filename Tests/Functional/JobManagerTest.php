@@ -22,34 +22,6 @@ class JobManagerTest extends BaseTestCase
 
     private $dispatcher;
 
-    public function testGetOne()
-    {
-        $a = new Job('a', ['foo']);
-        $a2 = new Job('a');
-        $this->em->persist($a);
-        $this->em->persist($a2);
-        $this->em->flush();
-
-        $this->assertSame($a, $this->jobManager->getJob('a', ['foo']));
-        $this->assertSame($a2, $this->jobManager->getJob('a'));
-    }
-
-    public function testGetOneThrowsWhenNotFound()
-    {
-        $this->expectException(\RuntimeException::class);
-
-        $this->expectExceptionMessage('Found no job for command');
-
-        $this->jobManager->getJob('foo');
-    }
-
-    public function testGetOrCreateIfNotExists()
-    {
-        $a = $this->jobManager->getOrCreateIfNotExists('a');
-        $this->assertSame($a, $this->jobManager->getOrCreateIfNotExists('a'));
-        $this->assertNotSame($a, $this->jobManager->getOrCreateIfNotExists('a', ['foo']));
-    }
-
     public function testFindPendingJobReturnsAllDependencies()
     {
         $a = new Job('a');

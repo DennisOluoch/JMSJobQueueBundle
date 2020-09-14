@@ -45,54 +45,6 @@ class JobManager
         $this->retryScheduler = $retryScheduler;
     }
 
-    public function findJob($command, array $args = array())
-    {
-        return $this->getJobManager()->createQuery("SELECT j FROM JMSJobQueueBundle:Job j WHERE j.command = :command AND j.args = :args")
-            ->setParameter('command', $command)
-            ->setParameter('args', json_encode($args))
-            ->setMaxResults(1)
-            ->getOneOrNullResult();
-    }
-
-    public function getJob($command, array $args = [])
-    {
-        if (null !== $job = $this->findJob($command, $args)) {
-            return $job;
-        }
-
-        throw new \RuntimeException(sprintf('Found no job for command "%s" with args "%s".', $command, json_encode($args)));
-    }
-
-    public function getOrCreateIfNotExists($command, array $args = [])
-    {
-        if (null !== $job = $this->findJob($command, $args)) {
-            return $job;
-        }
-
-        $job = new Job($command, $args, false);
-        $this->getJobManager()->persist($job);
-        $this->getJobManager()->flush($job);
-
-        $firstJob = $this->getJobManager()->createQuery("SELECT j FROM JMSJobQueueBundle:Job j WHERE j.command = :command AND j.args = :args ORDER BY j.id ASC")
-            ->setParameter('command', $command)
-            ->setParameter('args', $args, 'array')
-            ->setMaxResults(1)
-            ->getSingleResult();
-
-        if ($firstJob === $job) {
-            $job->setState(Job::STATE_PENDING);
-            $this->getJobManager()->persist($job);
-            $this->getJobManager()->flush($job);
-
-            return $job;
-        }
-
-        $this->getJobManager()->remove($job);
-        $this->getJobManager()->flush($job);
-
-        return $firstJob;
-    }
-
     public function findStartableJob($workerName, array &$excludedIds = array(), $excludedQueues = array(), $restrictedQueues = array())
     {
         while (null !== $job = $this->findPendingJob($excludedIds, $excludedQueues, $restrictedQueues)) {
