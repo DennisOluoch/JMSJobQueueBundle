@@ -49,12 +49,12 @@ class JobManager
     {
         return $this->getJobManager()->createQuery("SELECT j FROM JMSJobQueueBundle:Job j WHERE j.command = :command AND j.args = :args")
             ->setParameter('command', $command)
-            ->setParameter('args', $args, 'json')
+            ->setParameter('args', json_encode($args))
             ->setMaxResults(1)
             ->getOneOrNullResult();
     }
 
-    public function getJob($command, array $args = array())
+    public function getJob($command, array $args = [])
     {
         if (null !== $job = $this->findJob($command, $args)) {
             return $job;
@@ -63,7 +63,7 @@ class JobManager
         throw new \RuntimeException(sprintf('Found no job for command "%s" with args "%s".', $command, json_encode($args)));
     }
 
-    public function getOrCreateIfNotExists($command, array $args = array())
+    public function getOrCreateIfNotExists($command, array $args = [])
     {
         if (null !== $job = $this->findJob($command, $args)) {
             return $job;
@@ -75,7 +75,7 @@ class JobManager
 
         $firstJob = $this->getJobManager()->createQuery("SELECT j FROM JMSJobQueueBundle:Job j WHERE j.command = :command AND j.args = :args ORDER BY j.id ASC")
             ->setParameter('command', $command)
-            ->setParameter('args', $args, 'json')
+            ->setParameter('args', $args, 'array')
             ->setMaxResults(1)
             ->getSingleResult();
 

@@ -24,13 +24,13 @@ class JobManagerTest extends BaseTestCase
 
     public function testGetOne()
     {
-        $a = new Job('a', array('foo'));
+        $a = new Job('a', ['foo']);
         $a2 = new Job('a');
         $this->em->persist($a);
         $this->em->persist($a2);
         $this->em->flush();
 
-        $this->assertSame($a, $this->jobManager->getJob('a', array('foo')));
+        $this->assertSame($a, $this->jobManager->getJob('a', ['foo']));
         $this->assertSame($a2, $this->jobManager->getJob('a'));
     }
 
@@ -47,7 +47,7 @@ class JobManagerTest extends BaseTestCase
     {
         $a = $this->jobManager->getOrCreateIfNotExists('a');
         $this->assertSame($a, $this->jobManager->getOrCreateIfNotExists('a'));
-        $this->assertNotSame($a, $this->jobManager->getOrCreateIfNotExists('a', array('foo')));
+        $this->assertNotSame($a, $this->jobManager->getOrCreateIfNotExists('a', ['foo']));
     }
 
     public function testFindPendingJobReturnsAllDependencies()
