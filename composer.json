@@ -2,7 +2,7 @@
     "name":         "olaldennis/job-queue-bundle",
     "description":  "Allows to run and schedule Symfony 5 console commands as background jobs.",
     "keywords":     ["job","queue", "background", "cron", "scheduled"],
-    "homepage":     "http://github.com/DennisOluoch/JMSJobQueueBundle",
+    "homepage":     "https://github.com/DennisOluoch/JMSJobQueueBundle",
     "type":         "symfony-bundle",
     "license":      "Apache-2.0",
     "require": {
