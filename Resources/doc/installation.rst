@@ -23,13 +23,19 @@ automatically be registered using Symfony Flex:
         // ...
     ];
 
-Finally, have your ``bin/console`` use JMSJobQueueBundle's ``Application``:
+Have your ``bin/console`` use JMSJobQueueBundle's ``Application``:
 
 .. code-block :: php
 
     // use Symfony\Bundle\FrameworkBundle\Console\Application;
     use JMS\JobQueueBundle\Console\Application;
 
+Finally, run make migration and migrations migrate:
+
+.. code-block :: php
+
+    php bin/console make:migration
+    php bin/console doctrine:migrations:migrate
 
 Enabling the Webinterface
 =========================
