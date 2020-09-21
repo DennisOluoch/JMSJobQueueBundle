@@ -115,7 +115,7 @@ class Job
     /** @ORM\Column(type = "string") */
     private $command;
 
-    /** @ORM\Column(type = "json",options={"comment": "(DC2Type:json)"}) */
+    /** @ORM\Column(type = "json") */
     private $args = [];
 
     /**
