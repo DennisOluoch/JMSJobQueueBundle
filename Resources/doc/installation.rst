@@ -6,7 +6,7 @@ Installing JMSJobQueueBundle
 
 You can easily install JMSJobQueueBundle with composer. Just run:
 
-composer require jms/job-queue-bundle
+composer require olaldennis/job-queue-bundle
 
 Next you need to update your ``bundles.php`` file, and register the
 new bundle. If you are in Symfony 4 and above the bundle will 
