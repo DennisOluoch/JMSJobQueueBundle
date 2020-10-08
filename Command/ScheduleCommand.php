@@ -57,7 +57,7 @@ class ScheduleCommand extends Command
 
         $jobSchedulers = $this->populateJobSchedulers();
         if (empty($jobSchedulers)) {
-            $output->writeln('No job schedulers found, exiting...');
+            $output->writeln('<info>No job schedulers found, exiting...</info>');
 
             return Command::SUCCESS;
         }
@@ -69,7 +69,7 @@ class ScheduleCommand extends Command
             $lastRunAt = microtime(true);
             $now = time();
             if ($now - $startedAt > $maxRuntime) {
-                $output->writeln('Max. runtime reached, exiting...');
+                $output->writeln('<info>Max. runtime reached, exiting...</info>');
                 break;
             }
 

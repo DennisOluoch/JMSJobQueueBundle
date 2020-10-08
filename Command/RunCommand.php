@@ -133,7 +133,7 @@ class RunCommand extends Command
         $this->getEntityManager()->getConnection()->getConfiguration()->setSQLLogger(null);
 
         if ($this->verbose) {
-            $this->output->writeln('Cleaning up stale jobs');
+            $this->output->writeln('<info>Cleaning up stale jobs</info>');
         }
 
         $this->cleanUpStaleJobs($workerName);
@@ -157,16 +157,16 @@ class RunCommand extends Command
         $hasPcntl = extension_loaded('pcntl');
 
         if ($this->verbose) {
-            $this->output->writeln('Running jobs');
+            $this->output->writeln('<info>Running jobs</info>');
         }
 
         if ($hasPcntl) {
             $this->setupSignalHandlers();
             if ($this->verbose) {
-                $this->output->writeln('Signal Handlers have been installed.');
+                $this->output->writeln('<info>Signal Handlers have been installed.</info>');
             }
         } elseif ($this->verbose) {
-            $this->output->writeln('PCNTL extension is not available. Signals cannot be processed.');
+            $this->output->writeln('<error>PCNTL extension is not available. Signals cannot be processed.</error>');
         }
 
         while (true) {
@@ -186,7 +186,7 @@ class RunCommand extends Command
         }
 
         if ($this->verbose) {
-            $this->output->writeln('Entering shutdown sequence, waiting for running jobs to terminate...');
+            $this->output->writeln('<info>Entering shutdown sequence, waiting for running jobs to terminate...</info>');
         }
 
         while (!empty($this->runningJobs)) {
@@ -195,7 +195,7 @@ class RunCommand extends Command
         }
 
         if ($this->verbose) {
-            $this->output->writeln('All jobs finished, exiting.');
+            $this->output->writeln('<info>All jobs finished, exiting.</info>');
         }
     }
 
@@ -203,7 +203,7 @@ class RunCommand extends Command
     {
         pcntl_signal(SIGTERM, function () {
             if ($this->verbose) {
-                $this->output->writeln('Received SIGTERM signal.');
+                $this->output->writeln('<info>Received SIGTERM signal.</info>');
             }
 
             $this->shouldShutdown = true;
@@ -310,7 +310,9 @@ class RunCommand extends Command
             if ($data['job']->getMaxRuntime() > 0 && $runtime > $data['job']->getMaxRuntime()) {
                 $data['process']->stop(5);
 
-                $this->output->writeln($data['job'] . ' terminated; maximum runtime exceeded.');
+                $this->output->writeln(
+                    sprintf('<error>%s terminated; maximum runtime exceeded.</error>', $data['job'])
+                );
                 $this->jobManager->closeJob($data['job'], Job::STATE_TERMINATED);
                 unset($this->runningJobs[$i]);
 
@@ -329,7 +331,13 @@ class RunCommand extends Command
                 continue;
             }
 
-            $this->output->writeln($data['job'] . ' finished with exit code ' . $data['process']->getExitCode() . '.');
+            $this->output->writeln(
+                sprintf(
+                    '<info>%s finished with exit code %d.</info>',
+                    $data['job'],
+                    $data['process']->getExitCode()
+                )
+            );
 
             // If the Job exited with an exception, let's reload it so that we
             // get access to the stack trace. This might be useful for listeners.
@@ -379,7 +387,7 @@ class RunCommand extends Command
 
         $proc = new Process($args);
         $proc->start();
-        $this->output->writeln(sprintf('Started %s.', $job));
+        $this->output->writeln(sprintf('<info>Started %s.</info>', $job));
 
         $this->runningJobs[] = array(
             'process' => $proc,
@@ -424,7 +432,7 @@ class RunCommand extends Command
             if (0 !== $proc->run()) {
                 $ex = new ProcessFailedException($proc);
 
-                $this->output->writeln(sprintf('There was an error when marking %s as incomplete: %s', $job, $ex->getMessage()));
+                $this->output->writeln(sprintf('<error>There was an error when marking %s as incomplete: %s</error>', $job, $ex->getMessage()));
             }
         }
     }
@@ -446,8 +454,6 @@ class RunCommand extends Command
 
     private function getEntityManager(): EntityManager
     {
-        return
-            /** @var EntityManager */
-            $this->registry->getManagerForClass('JMSJobQueueBundle:Job');
+        return $this->registry->getManagerForClass('JMSJobQueueBundle:Job');
     }
 }
