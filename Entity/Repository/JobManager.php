@@ -37,7 +37,7 @@ class JobManager
     private $registry;
     private $retryScheduler;
 
-    public function __construct(PersistenceManagerRegistry $managerRegistry, EventDispatcherInterface $eventDispatcher, RetryScheduler $retryScheduler)
+    public function __construct(PersistenceManagerRegistry $managerRegistry, EventDispatcherInterface $eventDispatcher, RetryScheduler $retryScheduler = null)
     {
         $this->registry = $managerRegistry;
         $this->dispatcher = $eventDispatcher;
