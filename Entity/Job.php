@@ -248,6 +248,8 @@ class Job
     public function setWorkerName($workerName)
     {
         $this->workerName = $workerName;
+
+        return $this;
     }
 
     public function getWorkerName()
@@ -279,7 +281,7 @@ class Job
     public function setState($newState)
     {
         if ($newState === $this->state) {
-            return;
+            return $this;
         }
 
         switch ($this->state) {
@@ -328,6 +330,8 @@ class Job
         }
 
         $this->state = $newState;
+
+        return $this;
     }
 
     public function getCreatedAt()
@@ -348,6 +352,8 @@ class Job
     public function setExecuteAfter(\DateTime $executeAfter)
     {
         $this->executeAfter = $executeAfter;
+
+        return $this;
     }
 
     public function getCommand()
@@ -388,10 +394,12 @@ class Job
         }
 
         if ($this->relatedEntities->contains($entity)) {
-            return;
+            return $this;
         }
 
         $this->relatedEntities->add($entity);
+
+        return $this;
     }
 
     public function getDependencies()
@@ -407,7 +415,7 @@ class Job
     public function addDependency(Job $job)
     {
         if ($this->dependencies->contains($job)) {
-            return;
+            return $this;
         }
 
         if ($this->mightHaveStarted()) {
@@ -415,6 +423,8 @@ class Job
         }
 
         $this->dependencies->add($job);
+
+        return $this;
     }
 
     public function getRuntime()
@@ -425,6 +435,8 @@ class Job
     public function setRuntime($time)
     {
         $this->runtime = (int) $time;
+
+        return $this;
     }
 
     public function getMemoryUsage()
@@ -440,21 +452,29 @@ class Job
     public function addOutput($output)
     {
         $this->output .= $output;
+
+        return $this;
     }
 
     public function addErrorOutput($output)
     {
         $this->errorOutput .= $output;
+
+        return $this;
     }
 
     public function setOutput($output)
     {
         $this->output = $output;
+
+        return $this;
     }
 
     public function setErrorOutput($output)
     {
         $this->errorOutput = $output;
+
+        return $this;
     }
 
     public function getOutput()
@@ -470,6 +490,8 @@ class Job
     public function setExitCode($code)
     {
         $this->exitCode = $code;
+
+        return $this;
     }
 
     public function getExitCode()
@@ -480,6 +502,8 @@ class Job
     public function setMaxRuntime($time)
     {
         $this->maxRuntime = (int) $time;
+
+        return $this;
     }
 
     public function getMaxRuntime()
@@ -500,6 +524,8 @@ class Job
     public function setMaxRetries($tries)
     {
         $this->maxRetries = (int) $tries;
+
+        return $this;
     }
 
     public function isRetryAllowed()
@@ -533,6 +559,8 @@ class Job
         }
 
         $this->originalJob = $job;
+
+        return $this;
     }
 
     public function addRetryJob(Job $job)
@@ -543,6 +571,8 @@ class Job
 
         $job->setOriginalJob($this);
         $this->retryJobs->add($job);
+
+        return $this;
     }
 
     public function getRetryJobs()
@@ -581,6 +611,8 @@ class Job
     public function setStackTrace(FlattenException $ex)
     {
         $this->stackTrace = $ex;
+
+        return $this;
     }
 
     public function getStackTrace()
