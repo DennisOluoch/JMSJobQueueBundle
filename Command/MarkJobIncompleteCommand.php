@@ -2,8 +2,8 @@
 
 namespace JMS\JobQueueBundle\Command;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManager;
+use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
 use JMS\JobQueueBundle\Entity\Job;
 use Symfony\Component\Console\Command\Command;
 use JMS\JobQueueBundle\Entity\Repository\JobManager;
@@ -18,7 +18,7 @@ class MarkJobIncompleteCommand extends Command
     private $registry;
     private $jobManager;
 
-    public function __construct(ManagerRegistry $managerRegistry, JobManager $jobManager)
+    public function __construct(PersistenceManagerRegistry $managerRegistry, JobManager $jobManager)
     {
         $this->registry = $managerRegistry;
         $this->jobManager = $jobManager;

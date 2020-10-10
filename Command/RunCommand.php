@@ -19,12 +19,12 @@
 namespace JMS\JobQueueBundle\Command;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
 use JMS\JobQueueBundle\Entity\Job;
 use JMS\JobQueueBundle\Entity\Repository\JobManager;
 use JMS\JobQueueBundle\Event\NewOutputEvent;
 use JMS\JobQueueBundle\Event\StateChangeEvent;
 use JMS\JobQueueBundle\Exception\InvalidArgumentException;
-use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -46,7 +46,7 @@ class RunCommand extends Command
     /** @var OutputInterface */
     private $output;
 
-    /** @var ManagerRegistry */
+    /** @var PersistenceManagerRegistry */
     private $registry;
 
     /** @var JobManager */
@@ -67,7 +67,7 @@ class RunCommand extends Command
     /** @var array */
     private $queueOptions;
 
-    public function __construct(ManagerRegistry $managerRegistry, JobManager $jobManager, EventDispatcherInterface $dispatcher, array $queueOptionsDefault, array $queueOptions)
+    public function __construct(PersistenceManagerRegistry $managerRegistry, JobManager $jobManager, EventDispatcherInterface $dispatcher, array $queueOptionsDefault, array $queueOptions)
     {
         $this->registry = $managerRegistry;
         $this->jobManager = $jobManager;

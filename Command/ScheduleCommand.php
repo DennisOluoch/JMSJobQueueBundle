@@ -2,9 +2,9 @@
 
 namespace JMS\JobQueueBundle\Command;
 
-use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query;
+use Doctrine\Persistence\ManagerRegistry as PersistenceManagerRegistry;
 use JMS\JobQueueBundle\Console\CronCommand;
 use JMS\JobQueueBundle\Cron\CommandScheduler;
 use JMS\JobQueueBundle\Cron\JobScheduler;
@@ -23,7 +23,7 @@ class ScheduleCommand extends Command
     private $schedulers;
     private $cronCommands;
 
-    public function __construct(ManagerRegistry $managerRegistry, iterable $schedulers, iterable $cronCommands)
+    public function __construct(PersistenceManagerRegistry $managerRegistry, iterable $schedulers, iterable $cronCommands)
     {
         $this->registry = $managerRegistry;
         $this->schedulers = $schedulers;
