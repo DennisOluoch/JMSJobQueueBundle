@@ -77,7 +77,7 @@ class Application extends BaseApplication
         }
     }
 
-    private function saveDebugInformation(\Exception $ex = null)
+    private function saveDebugInformation(\Throwable $ex = null)
     {
         if (!$this->input->hasOption('jms-job-id') || null === $jobId = $this->input->getOption('jms-job-id')) {
             return;

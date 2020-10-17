@@ -200,7 +200,7 @@ class JobManager
 
                 $this->getJobManager()->getUnitOfWork()->detach($job); // ! detach is deprecated and has no replacement
             }
-        } catch (\Exception $ex) {
+        } catch (\Throwable $ex) {
             $this->getJobManager()->getConnection()->rollback();
 
             throw $ex;
