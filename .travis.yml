@@ -10,6 +10,8 @@ env:
     - PHPUNIT_BIN='vendor/bin/phpunit'
     - PHPUNIT_CONFIG='phpunit.xml.dist'
     - PHPUNIT_FLAGS='--stop-on-failure --verbose'
+    - XDEBUG_MODE=coverage
+
 
 cache:
   directories:
