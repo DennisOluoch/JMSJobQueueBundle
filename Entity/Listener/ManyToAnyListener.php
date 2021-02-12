@@ -3,8 +3,8 @@
 namespace JMS\JobQueueBundle\Entity\Listener;
 
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\Persistence\ManagerRegistry;
 use JMS\JobQueueBundle\Entity\Job;
-use Symfony\Bridge\Doctrine\ManagerRegistry;
 
 /**
  * Provides many-to-any association support for jobs.
