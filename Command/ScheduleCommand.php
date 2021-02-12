@@ -117,13 +117,13 @@ class ScheduleCommand extends Command
         $con = $em->getConnection();
 
         //* Issue #178 resolved
-        if (!$con->ping()) {
+        if (!$con->isConnected()) {
             $con->close();
             $con->connect();
         }
 
         $now = new \DateTime();
-        $affectedRows = $con->executeUpdate(
+        $affectedRows = $con->executeStatement(
             "UPDATE jms_cron_jobs SET lastRunAt = :now WHERE command = :command AND lastRunAt = :lastRunAt",
             array(
                 'now' => $now,
