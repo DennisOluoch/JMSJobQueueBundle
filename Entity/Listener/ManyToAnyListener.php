@@ -1,8 +1,10 @@
 <?php
 
 namespace JMS\JobQueueBundle\Entity\Listener;
+
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use JMS\JobQueueBundle\Entity\Job;
+use Symfony\Bridge\Doctrine\ManagerRegistry;
 
 /**
  * Provides many-to-any association support for jobs.
@@ -19,7 +21,7 @@ class ManyToAnyListener
     private $registry;
     private $ref;
 
-    public function __construct(\Doctrine\Common\Persistence\ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry)
     {
         $this->registry = $registry;
         $this->ref = new \ReflectionProperty('JMS\JobQueueBundle\Entity\Job', 'relatedEntities');
@@ -29,7 +31,7 @@ class ManyToAnyListener
     public function postLoad(\Doctrine\ORM\Event\LifecycleEventArgs $event)
     {
         $entity = $event->getEntity();
-        if ( ! $entity instanceof \JMS\JobQueueBundle\Entity\Job) {
+        if (!$entity instanceof \JMS\JobQueueBundle\Entity\Job) {
             return;
         }
 
@@ -39,7 +41,7 @@ class ManyToAnyListener
     public function preRemove(LifecycleEventArgs $event)
     {
         $entity = $event->getEntity();
-        if ( ! $entity instanceof Job) {
+        if (!$entity instanceof Job) {
             return;
         }
 
@@ -52,7 +54,7 @@ class ManyToAnyListener
     public function postPersist(\Doctrine\ORM\Event\LifecycleEventArgs $event)
     {
         $entity = $event->getEntity();
-        if ( ! $entity instanceof \JMS\JobQueueBundle\Entity\Job) {
+        if (!$entity instanceof \JMS\JobQueueBundle\Entity\Job) {
             return;
         }
 
@@ -62,8 +64,8 @@ class ManyToAnyListener
             $relId = $this->registry->getManagerForClass($relClass)->getMetadataFactory()->getMetadataFor($relClass)->getIdentifierValues($relatedEntity);
             asort($relId);
 
-            if ( ! $relId) {
-                throw new \RuntimeException('The identifier for the related entity "'.$relClass.'" was empty.');
+            if (!$relId) {
+                throw new \RuntimeException('The identifier for the related entity "' . $relClass . '" was empty.');
             }
 
             $con->executeUpdate("INSERT INTO jms_job_related_entities (job_id, related_class, related_id) VALUES (:jobId, :relClass, :relId)", array(
