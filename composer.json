@@ -9,7 +9,7 @@
         "php": "^7.4",
         "symfony/framework-bundle": "^5.2",
         "symfony/debug": "^3.4|^4.0|^5.0",
-        "doctrine/common": "^3.0",
+        "doctrine/common": "^2.5",
         "symfony/process": "^5.0"
     },
     "require-dev": {
