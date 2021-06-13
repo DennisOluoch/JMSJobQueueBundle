@@ -6,14 +6,13 @@
     "type":         "symfony-bundle",
     "license":      "Apache-2.0",
     "require": {
-        "php": "^7.4",
-        "symfony/framework-bundle": "^5.2",
-        "symfony/debug": "^3.4|^4.0|^5.0",
-        "doctrine/common": "^2.5",
+        "php": "^7.1|^8.0.0",
+        "symfony/framework-bundle": "^5.0",
+        "doctrine/common": "^3.0",
         "symfony/process": "^5.0"
     },
     "require-dev": {
-        "doctrine/doctrine-fixtures-bundle": "*",
+        "doctrine/doctrine-fixtures-bundle": "^3.3",
         "sensio/framework-extra-bundle": "*",
         "symfony/class-loader": "*",
         "symfony/yaml": "*",
@@ -21,11 +20,11 @@
         "symfony/finder": "*",
         "symfony/css-selector": "*",
         "doctrine/doctrine-bundle": "*",
-        "doctrine/orm": "*",
+        "symfony/orm-pack": "*",
         "symfony/twig-bundle": "*",
         "symfony/form": "*",
         "symfony/validator": "*",
-        "phpunit/phpunit": "^7.0",
+        "phpunit/phpunit": "^8.0",
         "symfony/intl": "*"
     },
     "suggest": {
